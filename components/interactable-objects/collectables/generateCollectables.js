@@ -2,7 +2,7 @@ function generateCollectables() {
   var generatedCollectables = [];
 
   labelGenerateCollectables: while (generatedCollectables.length < 6) {
-    var xPos = round(random(500, 4000));
+    var xPos = round(random(600, 4000));
     for (var i = 0; i < canyons.length; i++) {
       var collisionWithCanyon =
         xPos >= canyons[i].xPos && xPos <= canyons[i].xPos + canyons[i].width;

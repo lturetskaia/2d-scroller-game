@@ -362,15 +362,28 @@ class GameCharacter {
     }
   }
 
-  checkCharDie() {
+  checkCharLooseLife() {
     if (this.yPos > 640 && this.lives > 0) {
       this.lives -= 1;
       this.isAlive = false;
       if (this.lives === 0) {
-        return;
+        this.isAlive = false;
       }
       return true;
     }
     return false;
   }
+
+  // checkCharDie() {
+  //   if (this.yPos > 640 && this.lives > 0) {
+  //     this.lives -= 1;
+  //     this.isAlive = false;
+  //     if (this.lives === 0) {
+  //       this.isAlive = false;
+  //       return;
+  //     }
+  //     return true;
+  //   }
+  //   return false;
+  // }
 }

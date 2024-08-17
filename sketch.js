@@ -25,19 +25,28 @@ var trees;
 var clouds;
 var mountains;
 
-var game_score;
-
 var flagpole;
-var lives_icon;
+var livesIcon;
 
 var systemMessage;
 var gameStats;
+
+var sound;
+var soundOnIcon;
+var soundOffIcon;
+var soundButton;
+
+function preload() {
+  sound = new Sound();
+}
 
 function setup() {
   createCanvas(1024, 576);
   angleMode(DEGREES);
   floorPos_y = (height * 3) / 4;
-  lives_icon = loadImage("assets/lives_icon.png");
+  livesIcon = loadImage("assets/lives_icon.png");
+  soundOnIcon = loadImage("assets/sound_icon.png");
+  soundOffIcon = loadImage("assets/sound_off_icon.png");
 
   scrollingSpace = 5000;
 
@@ -49,6 +58,8 @@ function setup() {
 
   gameChar = new GameCharacter(width / 2, floorPos_y);
   gameStats = new GameStats();
+
+  soundButton = new SoundButton(950, 10, 50, soundOffIcon, soundOnIcon);
 
   startGame();
 }
@@ -96,6 +107,7 @@ function draw() {
     if (!collectables[i].isFound) {
       collectables[i].drawCollectable();
       if (collectables[i].checkCollectable()) {
+        soundButton.isToggle ? sound.playSound("collectable") : null;
         gameStats.updateScore();
       }
     }
@@ -112,12 +124,15 @@ function draw() {
   // -----------------------
   // game character info code
   // -----------------------
-  
+
   gameStats.displayStats();
-  
+
+  soundButton.drawButton();
+
   // system messages
 
   if (gameChar.lives < 1) {
+    sound.playSound("game-over");
     systemMessage.setProps("GAME OVER!", "Press space to continue");
     systemMessage.displayMessage();
     return;
@@ -146,9 +161,13 @@ function draw() {
     flagpole.checkFlagpole(gameChar.xPos);
   }
 
-  if (gameChar.isAlive && gameChar.checkCharDie()) {
+  if (gameChar.isAlive && gameChar.checkCharLooseLife()) {
+    soundButton.isToggle ? sound.playSound("fall") : null;
     gameStats.resetScore();
-    startGame();
+
+    if (gameChar.lives > 0) {
+      startGame();
+    }
   }
 }
 
@@ -176,14 +195,14 @@ function startGame() {
 
   cameraPosX = 0;
 
-  // game_score = 0;
-
   systemMessage = new Message();
 }
 
 function keyPressed() {
   // control the animation of the character when keys are pressed
   // moving left: left arrow or A
+
+  console.log(keyCode);
 
   if ((keyCode == 65 || keyCode == 37) && !gameChar.isPlummeting) {
     //moving left: left arrow or A
@@ -199,6 +218,7 @@ function keyPressed() {
   ) {
     if (!gameChar.isFalling && !flagpole.isReached) {
       gameChar.yPos -= 100;
+      soundButton.isToggle ? sound.playSound("jump ") : null;
     }
   } else if (
     // start game when game character runs out of lives
@@ -226,6 +246,25 @@ function keyReleased() {
     gameChar.isLeft = false;
   } else if (keyCode == 68 || keyCode == 39) {
     gameChar.isRight = false;
+  }
+}
+
+function mousePressed() {
+  //toggle on and off the sound button
+  console.log(soundButton);
+  var buttonCentreX = soundButton.xPos + soundButton.size / 2;
+  var buttonCentreY = soundButton.yPos + soundButton.size / 2;
+  var distance = dist(mouseX, mouseY, buttonCentreX, buttonCentreY);
+  var buttonClicked = distance <= soundButton.size / 2;
+  
+  if (buttonClicked) {
+    soundButton.toggleButton();
+  }
+
+  if (distance <= soundButton.size / 2 && soundButton.isToggle) {
+    sound.playSound("bgr");
+  } else {
+    sound.muteSound("bgr");
   }
 }
 
