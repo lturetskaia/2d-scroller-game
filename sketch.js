@@ -131,8 +131,7 @@ function draw() {
 
   // system messages
 
-  if (gameChar.lives < 1) {
-    sound.playSound("game-over");
+  if (gameStats.isGameOver) {
     systemMessage.setProps("GAME OVER!", "Press space to continue");
     systemMessage.displayMessage();
     return;
@@ -155,18 +154,20 @@ function draw() {
   // char plummeting
   gameChar.checkIsPlummeting();
 
-  // checking if the flagpole is reached
-
+  // check if the flagpole is reached
   if (!flagpole.isReached) {
     flagpole.checkFlagpole(gameChar.xPos);
   }
 
+  //check if the character loses lives ot dies
   if (gameChar.isAlive && gameChar.checkCharLooseLife()) {
     soundButton.isToggle ? sound.playSound("fall") : null;
     gameStats.resetScore();
 
     if (gameChar.lives > 0) {
       startGame();
+    } else {
+      gameStats.isGameOver = true;
     }
   }
 }
@@ -178,7 +179,6 @@ function startGame() {
   gameChar.yPos = floorPos_y;
 
   ground = new Ground();
-  console.log(ground);
   sky = new Sky();
 
   flagpole = new Flagpole(floorPos_y);
@@ -217,20 +217,19 @@ function keyPressed() {
     !flagpole.isReached
   ) {
     if (!gameChar.isFalling && !flagpole.isReached) {
+      soundButton.isToggle ? sound.playSound("jump") : null;
       gameChar.yPos -= 100;
-      soundButton.isToggle ? sound.playSound("jump ") : null;
     }
   } else if (
     // start game when game character runs out of lives
-    //more logic to be added // game over state
     (keyCode == 87 || keyCode == 32 || keyCode == 38) &&
-    gameChar.lives < 1
+    gameStats.isGameOver
   ) {
+    gameStats.isGameOver = false;
     gameChar.lives = 3;
     startGame();
   } else if (
     // start game when lvl complete
-    //more logic to be added
     (keyCode == 87 || keyCode == 32 || keyCode == 38) &&
     flagpole.isReached
   ) {
@@ -256,15 +255,10 @@ function mousePressed() {
   var buttonCentreY = soundButton.yPos + soundButton.size / 2;
   var distance = dist(mouseX, mouseY, buttonCentreX, buttonCentreY);
   var buttonClicked = distance <= soundButton.size / 2;
-  
+
   if (buttonClicked) {
     soundButton.toggleButton();
-  }
-
-  if (distance <= soundButton.size / 2 && soundButton.isToggle) {
-    sound.playSound("bgr");
-  } else {
-    sound.muteSound("bgr");
+    soundButton.isToggle ? sound.playSound("bgr") : sound.muteSound("bgr");
   }
 }
 
