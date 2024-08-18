@@ -148,6 +148,7 @@ function draw() {
   // -----------------------
   gameChar.moveChar(scrollingSpace);
 
+
   // check if the char is falling
   gameChar.checkIsFalling();
 
@@ -250,7 +251,6 @@ function keyReleased() {
 
 function mousePressed() {
   //toggle on and off the sound button
-  console.log(soundButton);
   var buttonCentreX = soundButton.xPos + soundButton.size / 2;
   var buttonCentreY = soundButton.yPos + soundButton.size / 2;
   var distance = dist(mouseX, mouseY, buttonCentreX, buttonCentreY);
@@ -258,7 +258,7 @@ function mousePressed() {
 
   if (buttonClicked) {
     soundButton.toggleButton();
-    soundButton.isToggle ? sound.playSound("bgr") : sound.muteSound("bgr");
+    soundButton.isToggle ? sound.playSound("bgr") : sound.muteSound();
   }
 }
 
