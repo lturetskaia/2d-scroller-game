@@ -24,6 +24,7 @@ var trees;
 
 var clouds;
 var mountains;
+var platforms;
 
 var flagpole;
 var livesIcon;
@@ -50,11 +51,12 @@ function setup() {
 
   scrollingSpace = 5000;
 
-  clouds = [];
-  trees = [];
-  mountains = [];
-  canyons = [];
-  collectables = [];
+  // clouds = [];
+  // trees = [];
+  // mountains = [];
+  // canyons = [];
+  // platforms = [];
+  // collectables = [];
 
   gameChar = new GameCharacter(width / 2, floorPos_y);
   gameStats = new GameStats();
@@ -102,6 +104,12 @@ function draw() {
     }
   }
 
+  //DRAW PLATFORMS
+  for (var i = 0; i < platforms.length; i++) {
+    platforms[i].drawPlatform(); 
+  }
+
+
   //DRAW COLLECTABLES
   for (var i = 0; i < collectables.length; i++) {
     if (!collectables[i].isFound) {
@@ -148,9 +156,19 @@ function draw() {
   // -----------------------
   gameChar.moveChar(scrollingSpace);
 
-
   // check if the char is falling
-  gameChar.checkIsFalling();
+  // gameChar.checkIsFalling();
+  if (gameChar.checkCharIsFalling(floorPos_y)) {
+    var hasContactWithPlatform = false;
+    for (var i = 0; i < platforms.length; i++) {
+      if(platforms[i].checkContact(gameChar.xPos, gameChar.yPos)) {
+        hasContactWithPlatform = true;
+        gameChar.isFalling = false;
+        break;
+      };
+    }
+    hasContactWithPlatform? null : gameChar.charFall(floorPos_y );
+  }
 
   // char plummeting
   gameChar.checkIsPlummeting();
@@ -174,6 +192,13 @@ function draw() {
 }
 
 function startGame() {
+  clouds = [];
+  trees = [];
+  mountains = [];
+  canyons = [];
+  platforms = [];
+  collectables = [];
+
   gameChar.isAlive = true;
   gameChar.isPlummeting = false;
   gameChar.xPos = width / 2;
@@ -186,13 +211,16 @@ function startGame() {
 
   generateCanyons();
 
+  generatePlatforms();
+
   generateTrees();
 
   generateClouds();
 
   generateMountains();
 
-  generateCollectables();
+  generateGroundCollectables();
+  generatePlatformCollectables();
 
   cameraPosX = 0;
 
@@ -202,8 +230,6 @@ function startGame() {
 function keyPressed() {
   // control the animation of the character when keys are pressed
   // moving left: left arrow or A
-
-  console.log(keyCode);
 
   if ((keyCode == 65 || keyCode == 37) && !gameChar.isPlummeting) {
     //moving left: left arrow or A
@@ -219,7 +245,7 @@ function keyPressed() {
   ) {
     if (!gameChar.isFalling && !flagpole.isReached) {
       soundButton.isToggle ? sound.playSound("jump") : null;
-      gameChar.yPos -= 100;
+      gameChar.yPos -= 120;
     }
   } else if (
     // start game when game character runs out of lives

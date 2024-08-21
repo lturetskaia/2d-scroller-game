@@ -5,6 +5,8 @@ function generateClouds() {
     var xPos = round(random(50, 4900));
     var yPos = round(random(70, 200));
     var size = Number(random(0.5, 1).toFixed(2));
+
+    //even number clouds move right, odd number - left
     if (i % 2 === 0) {
       var speed = Number(random(0.1, 0.5).toFixed(2));
     } else {
@@ -12,7 +14,6 @@ function generateClouds() {
     }
 
     var cloud = new Cloud(xPos, yPos, size, speed);
-
     generatedClouds.push(cloud);
   }
   

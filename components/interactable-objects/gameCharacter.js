@@ -347,13 +347,18 @@ class GameCharacter {
     }
   }
 
-  checkIsFalling() {
-    if (this.yPos < floorPos_y) {
+  checkCharIsFalling(floorPosY) {
+    if (this.yPos < floorPosY) {
       this.isFalling = true;
-      this.yPos = min(this.yPos + 4, floorPos_y);
+      return true;
     } else {
       this.isFalling = false;
+      return false;
     }
+  }
+
+  charFall(floorPosY) {
+      this.yPos = min(this.yPos + 4, floorPosY);
   }
 
   checkIsPlummeting() {
