@@ -9,7 +9,7 @@ Adding game mechanics
 
 // START (all the code was written without assistance)
 
-var floorPos_y;
+var floorPosY;
 var scrollingSpace;
 var cameraPosX;
 
@@ -30,7 +30,7 @@ var flagpole;
 var livesIcon;
 
 var systemMessage;
-var gameStats;
+var game;
 
 var sound;
 var soundOnIcon;
@@ -44,22 +44,15 @@ function preload() {
 function setup() {
   createCanvas(1024, 576);
   angleMode(DEGREES);
-  floorPos_y = (height * 3) / 4;
-  livesIcon = loadImage("assets/lives_icon.png");
-  soundOnIcon = loadImage("assets/sound_icon.png");
-  soundOffIcon = loadImage("assets/sound_off_icon.png");
+  floorPosY = (height * 3) / 4;
+  livesIcon = loadImage("assets/icons/lives_icon.png");
+  soundOnIcon = loadImage("assets/icons/sound_icon.png");
+  soundOffIcon = loadImage("assets/icons/sound_off_icon.png");
 
   scrollingSpace = 5000;
 
-  // clouds = [];
-  // trees = [];
-  // mountains = [];
-  // canyons = [];
-  // platforms = [];
-  // collectables = [];
-
-  gameChar = new GameCharacter(width / 2, floorPos_y);
-  gameStats = new GameStats();
+  gameChar = new GameCharacter(width / 2, floorPosY);
+  game = new Game();
 
   soundButton = new SoundButton(950, 10, 50, soundOffIcon, soundOnIcon);
 
@@ -68,12 +61,13 @@ function setup() {
 
 function draw() {
   cameraPosX = gameChar.xPos - width / 2;
+  displayCursor();
 
   //DRAW THE SKY
   sky.drawSky(gameChar.xPos, scrollingSpace);
 
   //DRAW GREEN GROUND
-  ground.drawGround(width, height, floorPos_y);
+  ground.drawGround(width, height, floorPosY, game.level);
 
   push(); //start of game objects isolation
 
@@ -91,7 +85,7 @@ function draw() {
 
   //DRAW TREES
   for (var i = 0; i < trees.length; i++) {
-    trees[i].drawTree();
+    trees[i].drawTree(game.level);
   }
 
   // DRAW CANYONS
@@ -106,9 +100,8 @@ function draw() {
 
   //DRAW PLATFORMS
   for (var i = 0; i < platforms.length; i++) {
-    platforms[i].drawPlatform(); 
+    platforms[i].drawPlatform();
   }
-
 
   //DRAW COLLECTABLES
   for (var i = 0; i < collectables.length; i++) {
@@ -116,7 +109,7 @@ function draw() {
       collectables[i].drawCollectable();
       if (collectables[i].checkCollectable()) {
         soundButton.isToggle ? sound.playSound("collectable") : null;
-        gameStats.updateScore();
+        game.updateScore();
       }
     }
   }
@@ -133,13 +126,13 @@ function draw() {
   // game character info code
   // -----------------------
 
-  gameStats.displayStats();
+  game.displayStats();
 
   soundButton.drawButton();
 
   // system messages
 
-  if (gameStats.isGameOver) {
+  if (game.isGameOver) {
     systemMessage.setProps("GAME OVER!", "Press space to continue");
     systemMessage.displayMessage();
     return;
@@ -158,16 +151,16 @@ function draw() {
 
   // check if the char is falling
   // gameChar.checkIsFalling();
-  if (gameChar.checkCharIsFalling(floorPos_y)) {
+  if (gameChar.checkCharIsFalling(floorPosY)) {
     var hasContactWithPlatform = false;
     for (var i = 0; i < platforms.length; i++) {
-      if(platforms[i].checkContact(gameChar.xPos, gameChar.yPos)) {
+      if (platforms[i].checkContact(gameChar.xPos, gameChar.yPos)) {
         hasContactWithPlatform = true;
         gameChar.isFalling = false;
         break;
-      };
+      }
     }
-    hasContactWithPlatform? null : gameChar.charFall(floorPos_y );
+    hasContactWithPlatform ? null : gameChar.charFall(floorPosY);
   }
 
   // char plummeting
@@ -178,53 +171,18 @@ function draw() {
     flagpole.checkFlagpole(gameChar.xPos);
   }
 
-  //check if the character loses lives ot dies
+  //check if the character loses lives or dies
   if (gameChar.isAlive && gameChar.checkCharLooseLife()) {
     soundButton.isToggle ? sound.playSound("fall") : null;
-    gameStats.resetScore();
+    game.resetScore();
 
     if (gameChar.lives > 0) {
+      game.resetToPrevScore();
       startGame();
     } else {
-      gameStats.isGameOver = true;
+      game.isGameOver = true;
     }
   }
-}
-
-function startGame() {
-  clouds = [];
-  trees = [];
-  mountains = [];
-  canyons = [];
-  platforms = [];
-  collectables = [];
-
-  gameChar.isAlive = true;
-  gameChar.isPlummeting = false;
-  gameChar.xPos = width / 2;
-  gameChar.yPos = floorPos_y;
-
-  ground = new Ground();
-  sky = new Sky();
-
-  flagpole = new Flagpole(floorPos_y);
-
-  generateCanyons();
-
-  generatePlatforms();
-
-  generateTrees();
-
-  generateClouds();
-
-  generateMountains();
-
-  generateGroundCollectables();
-  generatePlatformCollectables();
-
-  cameraPosX = 0;
-
-  systemMessage = new Message();
 }
 
 function keyPressed() {
@@ -250,10 +208,11 @@ function keyPressed() {
   } else if (
     // start game when game character runs out of lives
     (keyCode == 87 || keyCode == 32 || keyCode == 38) &&
-    gameStats.isGameOver
+    game.isGameOver
   ) {
-    gameStats.isGameOver = false;
+    game.isGameOver = false;
     gameChar.lives = 3;
+    game.level = 1;
     startGame();
   } else if (
     // start game when lvl complete
@@ -261,7 +220,8 @@ function keyPressed() {
     flagpole.isReached
   ) {
     flagpole.isReached = false;
-    gameStats.updateLevel();
+    game.updateLevel();
+    game.prevScore = game.score;
     startGame();
   }
 }

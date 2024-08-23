@@ -23,7 +23,7 @@ function generateGroundCollectables() {
       }
     }
     //generate a collectable on the ground
-    var collectable = new Collectable(xPos, floorPos_y);
+    var collectable = new Collectable(xPos, floorPosY);
     generatedCollectables.push(collectable);
   }
   collectables = [...generatedCollectables];

@@ -19,7 +19,7 @@ function generatePlatforms() {
       }
     }
 
-    var platform = new Platform(xPos, floorPos_y - 100, platformWidth);
+    var platform = new Platform(xPos, floorPosY - 100, platformWidth);
     generatedPlatforms.push(platform);
   }
 

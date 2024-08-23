@@ -1,6 +1,7 @@
-class GameStats {
+class Game {
   constructor() {
     this.level = 1;
+    this.prevScore = 0;
     this.score = 0;
     this.isGameOver = false;
   }
@@ -11,6 +12,9 @@ class GameStats {
 
   updateLevel(){
     this.level += 1;
+  }
+  resetToPrevScore(){
+    this.score = this.prevScore;
   }
 
   resetScore() {

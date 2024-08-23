@@ -1,11 +1,14 @@
 class Mountain {
-  constructor(xPos, yPos, size) {
+  constructor(xPos, yPos, size, colours) {
     this.xPos = xPos;
     this.yPos = yPos;
     this.size = size;
+    this.mountColor = colours;
+    
   }
+
   drawMountain() {
-    fill(61, 47, 6);
+    fill(this.mountColor.bottom);
     triangle(
       this.xPos,
       this.yPos,
@@ -24,7 +27,7 @@ class Mountain {
     );
 
     // snow on top
-    fill(255, 255, 255);
+    fill(this.mountColor.top);
     beginShape();
     vertex(this.xPos + 130 * this.size, this.yPos - 332 * this.size);
     vertex(this.xPos + 90 * this.size, this.yPos - 232 * this.size);

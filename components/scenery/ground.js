@@ -1,11 +1,21 @@
 class Ground {
   constructor() {
-    this.colour = color(0, 155, 0);
+    this.grassColour = color(0, 155, 0);
+    this.sandColour = color(217, 181, 108);
   }
 
-  drawGround(width, height, floorPosY) {
+  getColour(level) {
+    if (level % 2 == 1) {
+      return this.grassColour;
+    } else {
+      return this.sandColour;
+    }
+  }
+
+  drawGround(width, height, floorPosY, level) {
+    var colour = this.getColour(level);
     noStroke();
-    fill(this.colour);
+    fill(colour);
     rect(0, floorPosY, width, height - floorPosY);
   }
 }
