@@ -1,10 +1,10 @@
 function startGame() {
-    clouds = [];
-    trees = [];
-    mountains = [];
-    canyons = [];
-    platforms = [];
-    collectables = [];
+    // clouds = [];
+    // trees = [];
+    // mountains = [];
+    // canyons = [];
+    // platforms = [];
+    // collectables = [];
   
     gameChar.reset(width, floorPosY);
   
@@ -16,6 +16,8 @@ function startGame() {
     generateCanyons();
   
     generatePlatforms();
+
+    generateEnemies();
   
     generateTrees();
   

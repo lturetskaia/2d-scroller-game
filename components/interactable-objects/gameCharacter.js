@@ -9,6 +9,11 @@ class GameCharacter {
     this.isJumping = false;
     this.isPlummeting = false;
     this.isAlive = true;
+    this.platformContact = {
+      state: false,
+      platform: null,
+    };
+    this.isEnemyContact = false;
   }
 
   renderPosFaceForward() {
@@ -324,22 +329,22 @@ class GameCharacter {
   }
 
   drawGameChar() {
-    if (this.isLeft && this.isFalling) {
+    if (this.isLeft && (this.isFalling || this.isJumping)) {
       this.renderPosJumpLeft();
-    } else if (this.isRight && this.isFalling) {
+    } else if (this.isRight && (this.isFalling || this.isJumping)) {
       this.renderPosJumpRight();
     } else if (this.isLeft) {
       this.renderPosTurnLeft();
     } else if (this.isRight) {
       this.renderPosTurnRight();
-    } else if (this.isFalling || this.isPlummeting) {
+    } else if (this.isFalling || this.isPlummeting || this.isJumping) {
       this.renderPosJumpForward();
     } else {
       this.renderPosFaceForward();
     }
   }
 
-  moveChar(scrollingSpace) {
+  move(scrollingSpace) {
     if (this.isLeft) {
       this.xPos = max(this.xPos - 7, width / 2);
     } else if (this.isRight) {
@@ -347,18 +352,20 @@ class GameCharacter {
     }
   }
 
-  checkCharIsFalling(floorPosY) {
-    if (this.yPos < floorPosY) {
-      this.isFalling = true;
-      return true;
-    } else {
+  fall(floorPosY) {
+    this.yPos = min(this.yPos + 4, floorPosY);
+    if (this.yPos === floorPosY) {
+      this.isJumping = false;
       this.isFalling = false;
-      return false;
     }
   }
 
-  charFall(floorPosY) {
-      this.yPos = min(this.yPos + 4, floorPosY);
+  jump(floorPosY) {
+    this.yPos = max(this.yPos - 14, floorPosY - 120);
+    if (this.yPos === floorPosY - 120) {
+      this.isJumping = false;
+      this.isFalling = true;
+    }
   }
 
   checkIsPlummeting() {
@@ -367,8 +374,8 @@ class GameCharacter {
     }
   }
 
-  checkCharLooseLife() {
-    if (this.yPos > 640 && this.lives > 0) {
+  looseLife() {
+    if ((this.yPos > 640 && this.lives > 0) || (this.isEnemyContact && this.lives > 0)) {
       this.lives -= 1;
       this.isAlive = false;
       if (this.lives === 0) {
@@ -378,12 +385,36 @@ class GameCharacter {
     }
     return false;
   }
+  checkLeftPlatform(platforms) {
+    var platformStart = platforms[this.platformContact.platform].xPos;
+    var platformEnd =
+      platforms[this.platformContact.platform].xPos +
+      platforms[this.platformContact.platform].width;
+
+    var charLeftPlatform = this.xPos < platformStart || this.xPos > platformEnd;
+    if (charLeftPlatform) {
+      this.platformContact.state = false;
+      this.platformContact.platform = null;
+      this.isFalling = true;
+    }
+  }
+
+  checkEnemyCollision(enemy) {
+    var distance = dist(this.xPos, this.yPos, enemy.xPos, enemy.yPos);
+    var collisionWithEnemy = distance < 50;
+
+    if (collisionWithEnemy) {
+      this.isEnemyContact = true;
+      return true;
+    }
+    return false;
+  }
 
   reset(width, floorPosY) {
     this.isAlive = true;
     this.isPlummeting = false;
+    this.isEnemyContact = false;
     this.xPos = width / 2;
     this.yPos = floorPosY;
   }
-
 }

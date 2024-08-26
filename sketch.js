@@ -14,6 +14,7 @@ var scrollingSpace;
 var cameraPosX;
 
 var gameChar;
+var enemy;
 
 var sky;
 var ground;
@@ -51,8 +52,8 @@ function setup() {
 
   scrollingSpace = 5000;
 
-  gameChar = new GameCharacter(width / 2, floorPosY);
   game = new Game();
+  gameChar = new GameCharacter(width / 2, floorPosY);
 
   soundButton = new SoundButton(950, 10, 50, soundOffIcon, soundOnIcon);
 
@@ -120,6 +121,11 @@ function draw() {
   //DRAW THE GAME CHARACTER
   gameChar.drawGameChar();
 
+  // DRAW ENEMY
+  enemy.draw();
+
+  // DRAW ENEMY
+
   pop(); //end of game objects isolation
 
   // -----------------------
@@ -132,14 +138,20 @@ function draw() {
 
   // system messages
 
-  if (game.isGameOver) {
-    systemMessage.setProps("GAME OVER!", "Press space to continue");
+  if (gameChar.isEnemyContact && gameChar.lives > 0) {
+    systemMessage.setProps("You have been eaten!", "Press space to continue...");
+    systemMessage.displayMessage();
+    return;
+  }
+
+  if (game.isGameOver || gameChar.isEnemyContact && gameChar.lives <= 0) {
+    systemMessage.setProps("GAME OVER!", "Press space to start a new game...");
     systemMessage.displayMessage();
     return;
   }
 
   if (flagpole.isReached) {
-    systemMessage.setProps("LEVEL COMPLETE!", "Press space to continue");
+    systemMessage.setProps("LEVEL COMPLETE!", "Press space to continue...");
     systemMessage.displayMessage();
     return;
   }
@@ -147,32 +159,65 @@ function draw() {
   // -----------------------
   // game logic code
   // -----------------------
-  gameChar.moveChar(scrollingSpace);
+  gameChar.move(scrollingSpace);
 
-  // check if the char is falling
-  // gameChar.checkIsFalling();
-  if (gameChar.checkCharIsFalling(floorPosY)) {
-    var hasContactWithPlatform = false;
-    for (var i = 0; i < platforms.length; i++) {
-      if (platforms[i].checkContact(gameChar.xPos, gameChar.yPos)) {
-        hasContactWithPlatform = true;
-        gameChar.isFalling = false;
-        break;
-      }
+  enemy.move();
+
+  //check for jumping
+  if (gameChar.isJumping) {
+    var jumpBase;
+
+    if (!gameChar.platformContact.state) {
+      jumpBase = floorPosY;
+    } else {
+      jumpBase = platforms[gameChar.platformContact.platform].yPos;
     }
-    hasContactWithPlatform ? null : gameChar.charFall(floorPosY);
+
+    gameChar.jump(jumpBase);
+  }
+
+  //check for falling and falling logic
+
+  if (gameChar.isFalling) {
+    if (!gameChar.platformContact.state) {
+      for (var i = 0; i < platforms.length; i++) {
+        if (platforms[i].checkContact(gameChar.xPos, gameChar.yPos)) {
+          gameChar.platformContact.state = true;
+          gameChar.platformContact.platform = i;
+          gameChar.isFalling = false;
+          gameChar.yPos = platforms[i].yPos - 4;
+          break;
+        }
+      }
+      gameChar.fall(floorPosY);
+    } else {
+      jumpBase = platforms[gameChar.platformContact.platform].yPos;
+      gameChar.fall(jumpBase);
+    }
+  }
+
+  //check game character is over the platform
+
+  if (gameChar.platformContact.state) {
+    gameChar.checkLeftPlatform(platforms);
   }
 
   // char plummeting
   gameChar.checkIsPlummeting();
+
+  //check collision with enemy
+
+  if (gameChar.checkEnemyCollision(enemy)) {
+    gameChar.looseLife();
+  }
 
   // check if the flagpole is reached
   if (!flagpole.isReached) {
     flagpole.checkFlagpole(gameChar.xPos);
   }
 
-  //check if the character loses lives or dies
-  if (gameChar.isAlive && gameChar.checkCharLooseLife()) {
+  //check if the character looses lives or dies
+  if (gameChar.isAlive && gameChar.looseLife()) {
     soundButton.isToggle ? sound.playSound("fall") : null;
     game.resetScore();
 
@@ -198,13 +243,14 @@ function keyPressed() {
   } else if (
     // jumping: arrow up, spacebar or W
     (keyCode == 87 || keyCode == 32 || keyCode == 38) &&
+    !gameChar.isFalling &&
+    !gameChar.isJumping &&
     !gameChar.isPlummeting &&
-    !flagpole.isReached
+    !flagpole.isReached &&
+    !gameChar.isEnemyContact
   ) {
-    if (!gameChar.isFalling && !flagpole.isReached) {
-      soundButton.isToggle ? sound.playSound("jump") : null;
-      gameChar.yPos -= 120;
-    }
+    soundButton.isToggle ? sound.playSound("jump") : null;
+    gameChar.isJumping = true;
   } else if (
     // start game when game character runs out of lives
     (keyCode == 87 || keyCode == 32 || keyCode == 38) &&
@@ -213,6 +259,14 @@ function keyPressed() {
     game.isGameOver = false;
     gameChar.lives = 3;
     game.level = 1;
+    startGame();
+  } else if (
+    // start game when game character runs out of lives
+    (keyCode == 87 || keyCode == 32 || keyCode == 38) &&
+    gameChar.isEnemyContact
+  ) {
+    game.resetToPrevScore();
+    gameChar.isEnemyContact = false;
     startGame();
   } else if (
     // start game when lvl complete
