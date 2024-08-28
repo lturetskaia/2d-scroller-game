@@ -64,32 +64,30 @@ function draw() {
   cameraPosX = gameChar.xPos - width / 2;
   displayCursor();
 
-  //DRAW THE SKY
-  sky.drawSky(gameChar.xPos, scrollingSpace);
+  sky.drawSky(gameChar.xPos, scrollingSpace); // draw sky
 
-  //DRAW GREEN GROUND
-  ground.drawGround(width, height, floorPosY, game.level);
+  ground.drawGround(width, height, floorPosY, game.level); //darw ground
 
   push(); //start of game objects isolation
 
   translate(-cameraPosX, 0);
 
-  //DRAW MOUNTAINS
+  //draw mountains
   for (var i = 0; i < mountains.length; i++) {
     mountains[i].drawMountain();
   }
 
-  // DRAW CLOUDS
+  // draw clouds
   for (var i = 0; i < clouds.length; i++) {
     clouds[i].drawCloud(scrollingSpace);
   }
 
-  //DRAW TREES
+  //draw trees
   for (var i = 0; i < trees.length; i++) {
     trees[i].drawTree(game.level);
   }
 
-  // DRAW CANYONS
+  // draw canyons
   for (var i = 0; i < canyons.length; i++) {
     canyons[i].drawCanyon();
     var charOverCanyon = canyons[i].checkCanyon(gameChar.xPos, gameChar.yPos);
@@ -99,12 +97,12 @@ function draw() {
     }
   }
 
-  //DRAW PLATFORMS
+  //draw platforms
   for (var i = 0; i < platforms.length; i++) {
     platforms[i].drawPlatform();
   }
 
-  //DRAW COLLECTABLES
+  //draw collectables
   for (var i = 0; i < collectables.length; i++) {
     if (!collectables[i].isFound) {
       collectables[i].drawCollectable();
@@ -115,36 +113,31 @@ function draw() {
     }
   }
 
-  // DRAW A FLAGPOLE
-  flagpole.drawFlagpole();
+  flagpole.drawFlagpole(); // draw a flagpole
 
-  //DRAW THE GAME CHARACTER
-  gameChar.drawGameChar();
+  gameChar.drawGameChar(); //draw the game character
 
-  // DRAW ENEMY
-  enemy.draw();
-
-  // DRAW ENEMY
+  enemy.draw(); // draw enemy
 
   pop(); //end of game objects isolation
 
-  // -----------------------
   // game character info code
-  // -----------------------
-
   game.displayStats();
-
   soundButton.drawButton();
 
-  // system messages
+  //return the character to the ground if flagpole/enemy was contacted
+  if (gameChar.isEnemyContact || flagpole.isReached) {
+    gameChar.fall(floorPosY);
+  }
 
+  // system messages
   if (gameChar.isEnemyContact && gameChar.lives > 0) {
     systemMessage.setProps("You have been eaten!", "Press space to continue...");
     systemMessage.displayMessage();
     return;
   }
 
-  if (game.isGameOver || gameChar.isEnemyContact && gameChar.lives <= 0) {
+  if (game.isGameOver || (gameChar.isEnemyContact && gameChar.lives <= 0)) {
     systemMessage.setProps("GAME OVER!", "Press space to start a new game...");
     systemMessage.displayMessage();
     return;
@@ -156,20 +149,19 @@ function draw() {
     return;
   }
 
-  // -----------------------
   // game logic code
-  // -----------------------
   gameChar.move(scrollingSpace);
 
   enemy.move();
 
-  //check for jumping
+  //check if character is jumping and jumping logic
   if (gameChar.isJumping) {
     var jumpBase;
 
     if (!gameChar.platformContact.state) {
       jumpBase = floorPosY;
     } else {
+      // jumping on a platform
       jumpBase = platforms[gameChar.platformContact.platform].yPos;
     }
 
@@ -177,9 +169,9 @@ function draw() {
   }
 
   //check for falling and falling logic
-
   if (gameChar.isFalling) {
     if (!gameChar.platformContact.state) {
+      //contact with a platform
       for (var i = 0; i < platforms.length; i++) {
         if (platforms[i].checkContact(gameChar.xPos, gameChar.yPos)) {
           gameChar.platformContact.state = true;
@@ -191,13 +183,13 @@ function draw() {
       }
       gameChar.fall(floorPosY);
     } else {
-      jumpBase = platforms[gameChar.platformContact.platform].yPos;
+      //falling over a platform
+      var jumpBase = platforms[gameChar.platformContact.platform].yPos;
       gameChar.fall(jumpBase);
     }
   }
 
   //check game character is over the platform
-
   if (gameChar.platformContact.state) {
     gameChar.checkLeftPlatform(platforms);
   }
@@ -206,7 +198,6 @@ function draw() {
   gameChar.checkIsPlummeting();
 
   //check collision with enemy
-
   if (gameChar.checkEnemyCollision(enemy)) {
     gameChar.looseLife();
   }
@@ -232,16 +223,25 @@ function draw() {
 
 function keyPressed() {
   // control the animation of the character when keys are pressed
-  // moving left: left arrow or A
 
-  if ((keyCode == 65 || keyCode == 37) && !gameChar.isPlummeting) {
-    //moving left: left arrow or A
+  if (
+    // moving left: left arrow or A
+    (keyCode == 65 || keyCode == 37) &&
+    !gameChar.isPlummeting &&
+    !flagpole.isReached &&
+    !gameChar.isEnemyContact
+  ) {
     gameChar.isLeft = true;
-  } else if ((keyCode == 68 || keyCode == 39) && !gameChar.isPlummeting) {
+  } else if (
     //moving right: right arrow or D
+    (keyCode == 68 || keyCode == 39) &&
+    !gameChar.isPlummeting &&
+    !flagpole.isReached &&
+    !gameChar.isEnemyContact
+  ) {
     gameChar.isRight = true;
   } else if (
-    // jumping: arrow up, spacebar or W
+    // jump: arrow up, spacebar or W
     (keyCode == 87 || keyCode == 32 || keyCode == 38) &&
     !gameChar.isFalling &&
     !gameChar.isJumping &&
@@ -252,8 +252,8 @@ function keyPressed() {
     soundButton.isToggle ? sound.playSound("jump") : null;
     gameChar.isJumping = true;
   } else if (
-    // start game when game character runs out of lives
-    (keyCode == 87 || keyCode == 32 || keyCode == 38) &&
+    // restart game when game character runs out of lives
+    keyCode == 32 &&
     game.isGameOver
   ) {
     game.isGameOver = false;
@@ -261,16 +261,16 @@ function keyPressed() {
     game.level = 1;
     startGame();
   } else if (
-    // start game when game character runs out of lives
-    (keyCode == 87 || keyCode == 32 || keyCode == 38) &&
+    // continue game when character contact enemy and lives > 0
+    keyCode == 32 &&
     gameChar.isEnemyContact
   ) {
     game.resetToPrevScore();
     gameChar.isEnemyContact = false;
     startGame();
   } else if (
-    // start game when lvl complete
-    (keyCode == 87 || keyCode == 32 || keyCode == 38) &&
+    // continue game when lvl complete
+    keyCode == 32 &&
     flagpole.isReached
   ) {
     flagpole.isReached = false;

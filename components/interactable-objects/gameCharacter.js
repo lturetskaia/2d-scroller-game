@@ -401,7 +401,7 @@ class GameCharacter {
 
   checkEnemyCollision(enemy) {
     var distance = dist(this.xPos, this.yPos, enemy.xPos, enemy.yPos);
-    var collisionWithEnemy = distance < 50;
+    var collisionWithEnemy = distance < 60;
 
     if (collisionWithEnemy) {
       this.isEnemyContact = true;
