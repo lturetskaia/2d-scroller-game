@@ -1,5 +1,4 @@
 function displayCursor() {
-
   var buttonCentreX = soundButton.xPos + soundButton.size / 2;
   var buttonCentreY = soundButton.yPos + soundButton.size / 2;
   var distance = dist(mouseX, mouseY, buttonCentreX, buttonCentreY);

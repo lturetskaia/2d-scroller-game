@@ -16,24 +16,21 @@ var cameraPosX;
 var gameChar;
 var enemy;
 
+var game;
+var systemMessage;
+var sound;
+
 var sky;
 var ground;
-
 var collectables;
 var canyons;
 var trees;
-
 var clouds;
 var mountains;
 var platforms;
-
 var flagpole;
+
 var livesIcon;
-
-var systemMessage;
-var game;
-
-var sound;
 var soundOnIcon;
 var soundOffIcon;
 var soundButton;

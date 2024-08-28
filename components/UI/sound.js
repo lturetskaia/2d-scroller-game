@@ -19,6 +19,6 @@ class Sound {
   }
 
   muteSound() {
-    this.bgrSound.stop(); 
+    this.bgrSound.stop();
   }
 }

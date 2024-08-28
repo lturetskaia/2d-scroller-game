@@ -4,7 +4,7 @@ class Message {
     this.message = "";
   }
 
-  setProps(title, message){
+  setProps(title, message) {
     this.title = title;
     this.message = message;
   }

@@ -385,6 +385,7 @@ class GameCharacter {
     }
     return false;
   }
+
   checkLeftPlatform(platforms) {
     var platformStart = platforms[this.platformContact.platform].xPos;
     var platformEnd =

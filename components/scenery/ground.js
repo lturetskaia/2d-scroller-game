@@ -5,6 +5,7 @@ class Ground {
   }
 
   getColour(level) {
+    //change of ground colour depending on the level
     if (level % 2 == 1) {
       return this.grassColour;
     } else {

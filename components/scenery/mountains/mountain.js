@@ -4,11 +4,12 @@ class Mountain {
     this.yPos = yPos;
     this.size = size;
     this.mountColor = colours;
-    
   }
 
   drawMountain() {
     fill(this.mountColor.bottom);
+    
+    //mountains
     triangle(
       this.xPos,
       this.yPos,

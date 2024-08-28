@@ -2,6 +2,7 @@ function generateCanyons() {
   var generateCanyons = [];
   currentXPos = 700;
   var colour;
+
   if (game.level % 2 == 1) {
     colour = color(77, 232, 227);
   } else {
@@ -13,6 +14,7 @@ function generateCanyons() {
     var canyonWidth = round(random(80, 100 ));
     var canyon = new Canyon(currentXPos, floorPosY, canyonWidth, height, colour);
     currentXPos += dist;
+    
     generateCanyons.push(canyon);
   }
   

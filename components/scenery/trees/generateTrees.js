@@ -22,7 +22,7 @@ function generateTrees() {
     var colour = colours[round(random(0, colours.length - 1))];
 
     for (var i = 0; i < canyons.length; i++) {
-      //check for collision with canyons
+      //check for contact with canyons
       if (
         currentXPos + trunkWidth * size >= canyons[i].xPos &&
         currentXPos <= canyons[i].xPos + canyons[i].width

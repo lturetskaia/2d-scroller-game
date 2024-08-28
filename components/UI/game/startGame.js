@@ -1,35 +1,26 @@
 function startGame() {
-    // clouds = [];
-    // trees = [];
-    // mountains = [];
-    // canyons = [];
-    // platforms = [];
-    // collectables = [];
-  
-    gameChar.reset(width, floorPosY);
-  
-    ground = new Ground();
-    sky = new Sky();
-  
-    flagpole = new Flagpole(floorPosY);
-  
-    generateCanyons();
-  
-    generatePlatforms();
+  gameChar.reset(width, floorPosY);
 
-    generateEnemies();
-  
-    generateTrees();
-  
-    generateClouds();
-  
-    generateMountains();
-  
-    generateGroundCollectables();
+  ground = new Ground();
+  sky = new Sky();
+  flagpole = new Flagpole(floorPosY);
+  systemMessage = new Message();
 
-    generatePlatformCollectables();
-  
-    cameraPosX = 0;
-  
-    systemMessage = new Message();
-  }
+  cameraPosX = 0;
+
+  generateCanyons();
+
+  generatePlatforms();
+
+  generateEnemies();
+
+  generateTrees();
+
+  generateClouds();
+
+  generateMountains();
+
+  generateGroundCollectables();
+
+  generatePlatformCollectables();
+}

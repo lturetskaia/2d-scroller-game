@@ -16,6 +16,6 @@ function generateClouds() {
     var cloud = new Cloud(xPos, yPos, size, speed);
     generatedClouds.push(cloud);
   }
-  
+
   clouds = [...generatedClouds];
 }

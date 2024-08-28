@@ -65,23 +65,6 @@ class Tree {
     );
   }
 
-  generateFlower(x, y) {
-    //flower
-    fill(this.flowerColour);
-
-    ellipse(x, y, 10, 20);
-    push();
-    translate(x - 6, y + 3);
-    rotate(140);
-    ellipse(0, 0, 10, 20);
-    pop();
-    push();
-    translate(x + 6, y + 3);
-    rotate(50);
-    ellipse(0, 0, 10, 20);
-    pop();
-  }
-
   renderCactus() {
     fill(9, 135, 70);
 
@@ -121,6 +104,23 @@ class Tree {
     endShape();
 
     noStroke();
+  }
+
+  generateFlower(x, y) {
+    //flower
+    fill(this.flowerColour);
+
+    ellipse(x, y, 10, 20);
+    push();
+    translate(x - 6, y + 3);
+    rotate(140);
+    ellipse(0, 0, 10, 20);
+    pop();
+    push();
+    translate(x + 6, y + 3);
+    rotate(50);
+    ellipse(0, 0, 10, 20);
+    pop();
   }
 
   drawTree(level) {

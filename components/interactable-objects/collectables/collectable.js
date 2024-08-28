@@ -11,19 +11,9 @@ class Collectable {
       stroke(117, 79, 45);
       strokeWeight(1);
       fill(217, 190, 82);
-      ellipse(
-        this.xPos,
-        this.yPos - 20,
-        this.size * 0.7,
-        this.size * 0.8
-      );
+      ellipse(this.xPos, this.yPos - 20, this.size * 0.7, this.size * 0.8);
       fill(209, 144, 84);
-      ellipse(
-        this.xPos,
-        this.yPos - 20 - this.size * 0.24,
-        this.size * 0.8,
-        this.size * 0.4
-      );
+      ellipse(this.xPos, this.yPos - 20 - this.size * 0.24, this.size * 0.8, this.size * 0.4);
 
       push();
       fill(145, 113, 57);

@@ -24,5 +24,4 @@ function generatePlatforms() {
   }
 
   platforms = [...generatedPlatforms];
-  console.log(platforms);
 }

@@ -4,16 +4,17 @@ class Game {
     this.prevScore = 0;
     this.score = 0;
     this.isGameOver = false;
+    this.isIntroduction = true;
   }
 
   updateScore() {
     this.score += 1;
   }
 
-  updateLevel(){
+  updateLevel() {
     this.level += 1;
   }
-  resetToPrevScore(){
+  resetToPrevScore() {
     this.score = this.prevScore;
   }
 
