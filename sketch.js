@@ -118,35 +118,21 @@ function draw() {
 
   pop(); //end of game objects isolation
 
-  // game character info code
+  // game character info
   game.displayStats();
   soundButton.drawButton();
 
-  //return the character to the ground if flagpole/enemy was contacted
+  //return the character to the ground if flagpole/enemy has been contacted
   if (gameChar.isEnemyContact || flagpole.isReached) {
     gameChar.fall(floorPosY);
   }
 
-  // system messages
-  if (gameChar.isEnemyContact && gameChar.lives > 0) {
-    systemMessage.setProps("You have been eaten!", "Press space to continue...");
-    systemMessage.displayMessage();
+  //display system messages
+  if (displaySystemMessage()) {
     return;
   }
 
-  if (game.isGameOver || (gameChar.isEnemyContact && gameChar.lives <= 0)) {
-    systemMessage.setProps("GAME OVER!", "Press space to start a new game...");
-    systemMessage.displayMessage();
-    return;
-  }
-
-  if (flagpole.isReached) {
-    systemMessage.setProps("LEVEL COMPLETE!", "Press space to continue...");
-    systemMessage.displayMessage();
-    return;
-  }
-
-  // game logic code
+  // move characters
   gameChar.move(scrollingSpace);
 
   enemy.move();
@@ -194,34 +180,21 @@ function draw() {
   // char plummeting
   gameChar.checkIsPlummeting();
 
-  //check collision with enemy
-  if (gameChar.checkEnemyCollision(enemy)) {
-    gameChar.looseLife();
-  }
+  //loosing lives when contacting enemy/canyon
+  charLooseLife();
 
   // check if the flagpole is reached
   if (!flagpole.isReached) {
     flagpole.checkFlagpole(gameChar.xPos);
   }
-
-  //check if the character looses lives or dies
-  if (gameChar.isAlive && gameChar.looseLife()) {
-    soundButton.isToggle ? sound.playSound("fall") : null;
-    game.resetScore();
-
-    if (gameChar.lives > 0) {
-      game.resetToPrevScore();
-      startGame();
-    } else {
-      game.isGameOver = true;
-    }
-  }
 }
 
 function keyPressed() {
   // control the animation of the character when keys are pressed
-
-  if (
+  if (game.isWelcomeScreen) {
+    game.isWelcomeScreen = false;
+    startGame();
+  } else if (
     // moving left: left arrow or A
     (keyCode == 65 || keyCode == 37) &&
     !gameChar.isPlummeting &&
@@ -258,7 +231,7 @@ function keyPressed() {
     game.level = 1;
     startGame();
   } else if (
-    // continue game when character contact enemy and lives > 0
+    // continue game when character contacts enemy and lives > 0
     keyCode == 32 &&
     gameChar.isEnemyContact
   ) {

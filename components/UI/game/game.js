@@ -4,7 +4,7 @@ class Game {
     this.prevScore = 0;
     this.score = 0;
     this.isGameOver = false;
-    this.isIntroduction = true;
+    this.isWelcomeScreen = true;
   }
 
   updateScore() {
