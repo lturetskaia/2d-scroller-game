@@ -9,19 +9,12 @@ function generateMountains() {
   }
 
   for (var i = 0; i < 8; i++) {
-    // generate mountains to mark the beginning and end of level
-    if (i === 0) {
-      var firstMountain = new Mountain(100, floorPosY, 1.5, colours);
-      var lastMountain = new Mountain(4640, floorPosY, 1.5, colours);
-      generatedMountains.push(firstMountain, lastMountain);
-    }
-
-    //generate other mountains
+    //generate mountains
     var mountainSize = Number(random(0.5, 0.9).toFixed(2));
     var mountainWidth = 260;
     var mountRightEdge = mountainWidth * mountainSize;
-    var startXPos = 600;
-    var endXPos = scrollingSpace - 400 - mountRightEdge;
+    var startXPos = 100;
+    var endXPos = scrollingSpace - mountRightEdge;
     var mountainXpos = round(random(startXPos, endXPos));
 
     var mountain = new Mountain(mountainXpos, floorPosY, mountainSize, colours);

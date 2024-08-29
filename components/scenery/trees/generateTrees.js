@@ -3,8 +3,8 @@ function generateTrees() {
   var minDist = 150;
   var maxDist = 400;
   var trunkWidth = 20;
-  var startXPos = width / 2;
-  var endXPos = scrollingSpace - 500;
+  var startXPos = 100;
+  var endXPos = scrollingSpace - 100;
   var currentXPos = startXPos;
 
   var colours = [

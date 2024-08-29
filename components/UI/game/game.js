@@ -24,6 +24,7 @@ class Game {
 
   displayStats() {
     textSize(18);
+    textFont('Verdana');
     stroke(0);
     strokeWeight(3);
     fill(255);
