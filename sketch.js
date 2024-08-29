@@ -54,6 +54,7 @@ function setup() {
 }
 
 function draw() {
+  //centre camera position
   if (gameChar.xPos < width / 2) {
     cameraPosX = 0;
   } else if (gameChar.xPos > scrollingSpace - width / 2) {
@@ -61,7 +62,7 @@ function draw() {
   } else {
     cameraPosX = gameChar.xPos - width / 2;
   }
-   console.log(cameraPosX); 
+   
   displayCursor();
 
   sky.drawSky(gameChar.xPos, scrollingSpace); // draw sky

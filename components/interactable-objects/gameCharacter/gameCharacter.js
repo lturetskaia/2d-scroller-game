@@ -345,10 +345,12 @@ class GameCharacter {
   }
 
   move(scrollingSpace) {
+    //move the character inside the scrolling space
+    // allow it to reach the beginning and end of scrolling space(level)
     if (this.isLeft) {
       this.xPos = max(this.xPos - 7, 30);
     } else if (this.isRight) {
-      this.xPos = min(this.xPos + 7, scrollingSpace);
+      this.xPos = min(this.xPos + 7, scrollingSpace-30);
     }
   }
 

@@ -8,7 +8,7 @@ class Message {
 
 
       GOOD LUCK!`,
-      keys: `Move left/right:  \u2190  \u2192  or A/D           Jump:  SPACE / W /  \u2191           Start game:  any key`,
+      keys: `Move left/right:  \u2190  \u2192  or A/D       Jump:  SPACE / W /  \u2191       Start game:  any key`,
     };
   }
 
@@ -41,24 +41,26 @@ class Message {
     fill(27, 120, 191, 200);
 
     rectMode(CENTER);
-    stroke(100);
-    strokeWeight(2);
+    noStroke();
     rect(width / 2, height / 2, width, height);
 
     textAlign(CENTER, CENTER);
     textSize(40);
-    fill(0);
+    textFont('Verdana');
+    fill(222, 222, 16);
+    // strokeWeight(1);
+    // stroke(255);
     textStyle(BOLD);
     text(this.welcome.title, width / 2, height / 5, 800, 500);
 
     textStyle(BOLD);
-    noStroke();
     textSize(26);
     text(this.welcome.message, width / 2, height / 2, 600, 250);
     
     textSize(20);
+    fill(255);
     textStyle(NORMAL)
-    text(this.welcome.keys, width / 2, height - 30, 800, 250);
+    text(this.welcome.keys, width / 2, height - 30, 900, 250);
     pop();
   }
 }
