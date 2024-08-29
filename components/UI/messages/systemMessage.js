@@ -23,16 +23,20 @@ class Message {
     rectMode(CENTER);
     stroke(100);
     strokeWeight(2);
-    rect(width / 2, height / 3, 400, 250, 10);
+    rect(width / 2, height / 3, 500, 250, 10);
+    
+    textFont("Verdana");
     textAlign(CENTER, CENTER);
     textSize(30);
     fill(0);
     textStyle(BOLD);
-    text(this.title, width / 2, height / 3 - 30, 400, 250);
+    text(this.title, width / 2, height / 4, 500, 250);
+
     textStyle(NORMAL);
+    textAlign(CENTER, CENTER);
     noStroke();
     textSize(22);
-    text(this.message, width / 2, height / 3 + 20, 400, 250);
+    text(this.message, width / 2, height / 3+30, 500, 250);
     pop();
   }
 
@@ -46,20 +50,18 @@ class Message {
 
     textAlign(CENTER, CENTER);
     textSize(40);
-    textFont('Verdana');
+    textFont("Verdana");
     fill(222, 222, 16);
-    // strokeWeight(1);
-    // stroke(255);
     textStyle(BOLD);
     text(this.welcome.title, width / 2, height / 5, 800, 500);
 
     textStyle(BOLD);
     textSize(26);
     text(this.welcome.message, width / 2, height / 2, 600, 250);
-    
+
     textSize(20);
     fill(255);
-    textStyle(NORMAL)
+    textStyle(NORMAL);
     text(this.welcome.keys, width / 2, height - 30, 900, 250);
     pop();
   }

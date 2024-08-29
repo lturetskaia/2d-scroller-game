@@ -1,5 +1,5 @@
 function displaySystemMessage() {
-    msgIsDisplayed = false;
+  msgIsDisplayed = false;
   //welcome message
   if (game.isWelcomeScreen) {
     systemMessage.displayWelcome();
@@ -21,11 +21,21 @@ function displaySystemMessage() {
     msgIsDisplayed = true;
   }
 
-  if (flagpole.isReached) {
+  if (game.isWin) {
+    systemMessage.setProps(
+      "YOU WIN!",
+      `Your score is ${game.score}.
+      
+      Press space to start a new game...`
+    );
+    systemMessage.displayMessage();
+  }
+  if (flagpole.isReached && !game.isWin) {
     systemMessage.setProps("LEVEL COMPLETE!", "Press space to continue...");
     systemMessage.displayMessage();
     // return;
     msgIsDisplayed = true;
   }
+
   return msgIsDisplayed;
 }
