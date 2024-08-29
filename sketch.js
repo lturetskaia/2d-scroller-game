@@ -62,7 +62,7 @@ function draw() {
   } else {
     cameraPosX = gameChar.xPos - width / 2;
   }
-   
+
   displayCursor();
 
   sky.drawSky(gameChar.xPos, scrollingSpace); // draw sky
@@ -126,13 +126,12 @@ function draw() {
   game.displayStats();
   soundButton.drawButton();
 
-  // raise the flag if flagpole is reached
-  flagpole.raiseFlag();
-
   //return the character to the ground if flagpole/enemy has been contacted
   if (gameChar.isEnemyContact || flagpole.isReached) {
     gameChar.fall(floorPosY);
   }
+
+  flagpole.raiseFlag(); // raise the flag if flagpole is reached
 
   //display system messages
   if (displaySystemMessage()) {
@@ -194,6 +193,8 @@ function draw() {
   if (!flagpole.isReached) {
     flagpole.checkFlagpole(gameChar.xPos);
   }
+
+  game.checkIsWin(flagpole); // check if the playes has won
 }
 
 function keyPressed() {
@@ -206,7 +207,8 @@ function keyPressed() {
     (keyCode == 65 || keyCode == 37) &&
     !gameChar.isPlummeting &&
     !flagpole.isReached &&
-    !gameChar.isEnemyContact
+    !gameChar.isEnemyContact &&
+    !game.isWin
   ) {
     gameChar.isLeft = true;
   } else if (
@@ -214,7 +216,8 @@ function keyPressed() {
     (keyCode == 68 || keyCode == 39) &&
     !gameChar.isPlummeting &&
     !flagpole.isReached &&
-    !gameChar.isEnemyContact
+    !gameChar.isEnemyContact &&
+    !game.isWin
   ) {
     gameChar.isRight = true;
   } else if (
@@ -224,7 +227,8 @@ function keyPressed() {
     !gameChar.isJumping &&
     !gameChar.isPlummeting &&
     !flagpole.isReached &&
-    !gameChar.isEnemyContact
+    !gameChar.isEnemyContact &&
+    !game.isWin
   ) {
     soundButton.isToggle ? sound.playSound("jump") : null;
     gameChar.isJumping = true;
@@ -233,9 +237,10 @@ function keyPressed() {
     keyCode == 32 &&
     game.isGameOver
   ) {
-    game.isGameOver = false;
+    // game.isGameOver = false;
+    // game.level = 1;
+    game.resetGame();
     gameChar.lives = 3;
-    game.level = 1;
     startGame();
   } else if (
     // continue game when character contacts enemy and lives > 0
@@ -248,11 +253,15 @@ function keyPressed() {
   } else if (
     // continue game when lvl complete
     keyCode == 32 &&
-    flagpole.isReached
+    flagpole.isReached &&
+    !game.isWin
   ) {
     flagpole.isReached = false;
     game.updateLevel();
     game.prevScore = game.score;
+    startGame();
+  } else if (keyCode == 32 && flagpole.isReached && game.isWin) {
+    game.resetGame();
     startGame();
   }
 }

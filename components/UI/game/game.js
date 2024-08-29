@@ -5,6 +5,7 @@ class Game {
     this.score = 0;
     this.isGameOver = false;
     this.isWelcomeScreen = true;
+    this.isWin = false;
   }
 
   updateScore() {
@@ -20,6 +21,21 @@ class Game {
 
   resetScore() {
     this.score = 0;
+  }
+
+  resetGame() {
+    this.level = 1;
+    this.score = 0;
+    this.prevScore = 0;
+    this.isGameOver = false;
+    this.isWin = false;
+
+  }
+
+  checkIsWin(flagpole){
+    if(this.level === 2 && flagpole.isReached){
+      this.isWin = true;
+    }
   }
 
   displayStats() {
