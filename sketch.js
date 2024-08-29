@@ -1,10 +1,6 @@
 /*
-
 The Game Project
-
-Part 6 
-Adding game mechanics
-
+Final Version
 */
 
 // START (all the code was written without assistance)
@@ -58,7 +54,14 @@ function setup() {
 }
 
 function draw() {
-  cameraPosX = gameChar.xPos - width / 2;
+  if (gameChar.xPos < width / 2) {
+    cameraPosX = 0;
+  } else if (gameChar.xPos > scrollingSpace - width / 2) {
+    cameraPosX = scrollingSpace - width / 2;
+  } else {
+    cameraPosX = gameChar.xPos - width / 2;
+  }
+   console.log(cameraPosX); 
   displayCursor();
 
   sky.drawSky(gameChar.xPos, scrollingSpace); // draw sky

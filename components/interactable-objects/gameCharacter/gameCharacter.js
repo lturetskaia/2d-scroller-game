@@ -346,9 +346,9 @@ class GameCharacter {
 
   move(scrollingSpace) {
     if (this.isLeft) {
-      this.xPos = max(this.xPos - 7, width / 2);
+      this.xPos = max(this.xPos - 7, 30);
     } else if (this.isRight) {
-      this.xPos = min(this.xPos + 7, scrollingSpace - width / 2);
+      this.xPos = min(this.xPos + 7, scrollingSpace);
     }
   }
 

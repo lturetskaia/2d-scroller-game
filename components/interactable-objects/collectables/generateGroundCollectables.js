@@ -2,7 +2,7 @@ function generateGroundCollectables() {
   var generatedCollectables = [];
 
   labelGenerateCollectables: while (generatedCollectables.length < 6) {
-    var xPos = round(random(600, 4000));
+    var xPos = round(random(200, 4200));
     // check for collision with the canyons
     for (var i = 0; i < canyons.length; i++) {
       var collisionWithCanyon =
