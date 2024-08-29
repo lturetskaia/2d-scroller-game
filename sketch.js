@@ -125,6 +125,9 @@ function draw() {
   game.displayStats();
   soundButton.drawButton();
 
+  // raise the flag if flagpole is reached
+  flagpole.raiseFlag();
+
   //return the character to the ground if flagpole/enemy has been contacted
   if (gameChar.isEnemyContact || flagpole.isReached) {
     gameChar.fall(floorPosY);
