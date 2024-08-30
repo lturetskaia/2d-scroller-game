@@ -47,7 +47,6 @@ function setup() {
 
   game = new Game();
   gameChar = new GameCharacter(width / 2, floorPosY);
-
   soundButton = new SoundButton(950, 10, 50, soundOffIcon, soundOnIcon);
 
   startGame();
@@ -63,11 +62,11 @@ function draw() {
     cameraPosX = gameChar.xPos - width / 2;
   }
 
-  displayCursor();
+  displayCursor(); //change the shape of the cursor when hovering over a button
 
   sky.drawSky(gameChar.xPos, scrollingSpace); // draw sky
 
-  ground.drawGround(width, height, floorPosY, game.level); //darw ground
+  ground.drawGround(width, height, floorPosY, game.level); //draw ground
 
   push(); //start of game objects isolation
 
@@ -140,7 +139,6 @@ function draw() {
 
   // move characters
   gameChar.move(scrollingSpace);
-
   enemy.move();
 
   //check if character is jumping and jumping logic
@@ -194,11 +192,12 @@ function draw() {
     flagpole.checkFlagpole(gameChar.xPos);
   }
 
-  game.checkIsWin(flagpole); // check if the playes has won
+  game.checkIsWin(flagpole); // check if the player has won
 }
 
 function keyPressed() {
   // control the animation of the character when keys are pressed
+
   if (game.isWelcomeScreen) {
     game.isWelcomeScreen = false;
     startGame();
@@ -237,13 +236,11 @@ function keyPressed() {
     keyCode == 32 &&
     game.isGameOver
   ) {
-    // game.isGameOver = false;
-    // game.level = 1;
     game.resetGame();
     gameChar.lives = 3;
     startGame();
   } else if (
-    // continue game when character contacts enemy and lives > 0
+    // continue game when character contacts enemy(lives > 0)
     keyCode == 32 &&
     gameChar.isEnemyContact
   ) {
@@ -261,6 +258,7 @@ function keyPressed() {
     game.prevScore = game.score;
     startGame();
   } else if (keyCode == 32 && flagpole.isReached && game.isWin) {
+    // reset the game after winning
     game.resetGame();
     startGame();
   }

@@ -1,5 +1,6 @@
 function generatePlatformCollectables() {
-  var collectableAmount = Math.round(platforms.length * 0.3);
+  //collectables spawn on ~30% of the platforms
+  var collectableAmount = Math.round(platforms.length * 0.3); 
 
   // generate collectables on ~30% of the platforms
   for (var i = 0; i < collectableAmount; i++) {

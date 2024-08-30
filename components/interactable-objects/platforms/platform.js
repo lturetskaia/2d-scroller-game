@@ -9,7 +9,6 @@ class Platform {
   drawStone(x, y, w, h) {
     strokeWeight(1);
     stroke(0);
-    // fill(181, 146, 138);
     fill(186, 170, 123);
     rect(x, y, w, h, 3);
   }

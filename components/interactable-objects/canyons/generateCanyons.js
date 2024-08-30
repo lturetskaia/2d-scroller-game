@@ -1,16 +1,17 @@
 function generateCanyons() {
   var generateCanyons = [];
-  currentXPos = 700;
+  currentXPos = 700; // position of the 1st canyon
   var colour;
 
   if (game.level % 2 == 1) {
+    //change canyon colour depending on current lvl
     colour = color(77, 232, 227);
   } else {
     colour =  color(69, 52, 18);
   }
 
   while (currentXPos <= 4200){
-    var dist = round(random(900, 1200 ));
+    var dist = round(random(900, 1200 )); //distance between canyons
     var canyonWidth = round(random(80, 100 ));
     var canyon = new Canyon(currentXPos, floorPosY, canyonWidth, height, colour);
     currentXPos += dist;

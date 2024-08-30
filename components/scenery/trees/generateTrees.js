@@ -17,9 +17,9 @@ function generateTrees() {
   ];
 
   while (currentXPos < endXPos) {
-    var dist = round(random(minDist, maxDist));
+    var dist = round(random(minDist, maxDist)); //distance between trees
     var size = Number(random(0.6, 1).toFixed(2));
-    var colour = colours[round(random(0, colours.length - 1))];
+    var colour = colours[round(random(0, colours.length - 1))]; //random color for cacti flowers
 
     for (var i = 0; i < canyons.length; i++) {
       //check for contact with canyons

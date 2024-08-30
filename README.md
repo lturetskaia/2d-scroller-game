@@ -1,1 +1,1 @@
-This is a 2D side-scroller game created with p5.js.
+This is a 2D side-scroller game created with p5.js. 

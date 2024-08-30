@@ -92,7 +92,7 @@ class Enemy {
     curveVertex(this.xPos + 15, this.yPos - 45);
     endShape();
 
-    fill(255, 255, 255);
+    fill(255, 255, 255); //teeth
     triangle(
       this.xPos + 35,
       this.yPos - 20,
