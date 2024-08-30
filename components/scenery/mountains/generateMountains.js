@@ -24,7 +24,6 @@ function generateMountains() {
       var dist = abs(mountainCentre - canyonCentre);
       var isOverlap = dist < canyons[j].width / 2 + (mountainWidth * mountainSize) / 2;
       if (isOverlap) {
-        console.log(`Overlap`);
         continue labelGenerateMountains;
       }
     }
@@ -34,5 +33,4 @@ function generateMountains() {
   }
 
   mountains = [...generatedMountains];
-  console.log(mountains);
 }
