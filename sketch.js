@@ -259,6 +259,7 @@ function keyPressed() {
     startGame();
   } else if (keyCode == 32 && flagpole.isReached && game.isWin) {
     // reset the game after winning
+    gameChar.lives = 3;
     game.resetGame();
     startGame();
   }
